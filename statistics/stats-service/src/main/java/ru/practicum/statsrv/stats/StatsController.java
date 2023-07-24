@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.practicum.dto.EndpointHitDto;
 import ru.practicum.dto.ViewStatsDto;
 
+import javax.validation.Valid;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -18,7 +19,7 @@ public class StatsController {
 
     @PostMapping("/hit")
     @ResponseStatus(HttpStatus.CREATED)
-    public void createEndpointHit(@RequestBody EndpointHitDto endpointHitDto) {
+    public void createEndpointHit(@RequestBody @Valid EndpointHitDto endpointHitDto) {
         statsService.createEndpointHit(endpointHitDto);
         log.info("Cовершен запрос к сервису:{}, uri:{}, с IP:{}, точное время запроса: {}", endpointHitDto.getApp(),
                 endpointHitDto.getUri(), endpointHitDto.getIp(), endpointHitDto.getTimestamp());
