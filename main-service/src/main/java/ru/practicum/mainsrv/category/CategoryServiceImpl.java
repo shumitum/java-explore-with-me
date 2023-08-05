@@ -5,6 +5,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.practicum.mainsrv.event.EventRepository;
+import ru.practicum.mainsrv.exception.ValidationException;
 
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -15,6 +17,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class CategoryServiceImpl implements CategoryService {
     private final CategoryRepository catRepository;
+    private final EventRepository eventRepository;
     private final CategoryMapper catMapper;
 
     @Override
@@ -41,6 +44,9 @@ public class CategoryServiceImpl implements CategoryService {
     @Transactional
     public void deleteCategoryById(Long catId) {
         checkCategoryExistence(catId);
+        if (eventRepository.existsEventByCategory_Id(catId)) {
+            throw new ValidationException("с категорией не должно быть связано ни одного события.");
+        }
         catRepository.deleteById(catId);
     }
 
@@ -59,6 +65,7 @@ public class CategoryServiceImpl implements CategoryService {
         return catMapper.toCategoryDto(findCategoryById(catId));
     }
 
+    @Override
     @Transactional(readOnly = true)
     public Category findCategoryById(long catId) {
         return catRepository.findById(catId)

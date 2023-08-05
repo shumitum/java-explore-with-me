@@ -16,7 +16,7 @@ import javax.persistence.Embeddable;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Location {
     @Column(name = "lat")
-    Float lan;
+    Float lat;
 
     @Column(name = "lon")
     Float lon;

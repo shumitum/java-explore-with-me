@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.practicum.mainsrv.user.dto.UserDto;
 
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -41,12 +42,14 @@ public class UserServiceImpl implements UserService {
         userRepository.deleteById(userId);
     }
 
+    @Override
     @Transactional(readOnly = true)
     public User findUserById(long userId) {
         return userRepository.findById(userId)
                 .orElseThrow(() -> new NoSuchElementException(String.format("Пользователя с ID=%d не существует", userId)));
     }
 
+    @Override
     @Transactional(readOnly = true)
     public void checkUserExistence(long userId) {
         if (!userRepository.existsById(userId)) {

@@ -2,8 +2,8 @@ package ru.practicum.mainsrv.event;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-import org.hibernate.annotations.CreationTimestamp;
 import ru.practicum.mainsrv.category.Category;
+import ru.practicum.mainsrv.event.enums.EventState;
 import ru.practicum.mainsrv.event.location.Location;
 import ru.practicum.mainsrv.user.User;
 
@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 
 @Data
 @Entity
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
@@ -33,12 +34,10 @@ public class Event {
     @ToString.Exclude
     Category category;
 
-/*    @Column(name = "confirmed_requests")
-    int confirmedRequests;*/
+    @Column(name = "confirmed_requests")
+    Long confirmedRequests;
 
     @NotNull
-    @CreationTimestamp
-    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "created_on")
     LocalDateTime createdOn;
 
@@ -65,12 +64,11 @@ public class Event {
     @Column(name = "participant_limit")
     int participantLimit;
 
-    //@NotNull
     @Column(name = "published_on")
     LocalDateTime publishedOn;
 
     @Column(name = "request_moderation")
-    Boolean requestModeration;
+    Boolean requestModeration; //по умолчанию при создании значение???
 
     @NotNull
     @Column(name = "state")
@@ -80,4 +78,6 @@ public class Event {
     @NotBlank
     @Column(name = "title")
     String title;
+
+    //Long views;
 }

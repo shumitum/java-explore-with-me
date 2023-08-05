@@ -17,6 +17,6 @@ public class CategoryDto {
     Long id;
 
     @Size(max = 50)
-    @NotBlank//(message = "Поле Имя не должно быть пустым")
+    @NotBlank
     String name;
 }

@@ -1,4 +1,4 @@
-package ru.practicum.mainsrv.exception;
+package ru.practicum.statsrv.exception;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -28,22 +28,15 @@ public class ErrorHandler {
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponse handleInvalidArgumentException(final InvalidArgumentException e) {
+    public ErrorResponse handleTimeValidationException(final TimeValidationException e) {
         log.warn("Получен статус 400 BAD REQUEST {}", e.getMessage());
         return new ErrorResponse(e.getMessage());
     }
 
-    @ExceptionHandler({DataIntegrityViolationException.class, TimeValidationException.class, ValidationException.class})
+    @ExceptionHandler({DataIntegrityViolationException.class})
     @ResponseStatus(HttpStatus.CONFLICT)
-    public ErrorResponse handleTimeValidationException(final Exception e) {
+    public ErrorResponse handleDataIntegrityViolationException(final Exception e) {
         log.warn("Получен статус 409 CONFLICT {}", e.getMessage());
         return new ErrorResponse(e.getMessage());
     }
-
-/*    @ExceptionHandler
-    @ResponseStatus(HttpStatus.CONFLICT)
-    public ErrorResponse handleValidationException(final ValidationException e) {
-        log.warn("Получен статус 409 CONFLICT {}", e.getMessage());
-        return new ErrorResponse(e.getMessage());
-    }*/
 }

@@ -1,4 +1,4 @@
-package ru.practicum.mainsrv.user;
+package ru.practicum.mainsrv.user.dto;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;

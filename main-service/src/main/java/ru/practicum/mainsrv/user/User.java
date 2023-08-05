@@ -1,11 +1,9 @@
 package ru.practicum.mainsrv.user;
 
 
-import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.experimental.FieldDefaults;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -15,18 +13,17 @@ import javax.validation.constraints.NotBlank;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "users", schema = "public")
-@FieldDefaults(level = AccessLevel.PRIVATE)
 public class User {
     @Id
     @Column(name = "user_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
+    private Long id;
 
     @NotBlank
-    @Column(name = "name")
-    String name;
+    @Column(name = "name", unique = true)
+    private String name;
 
     @NotBlank
     @Column(name = "email")
-    String email;
+    private String email;
 }
