@@ -1,9 +1,6 @@
 package ru.practicum.mainsrv.user.dto;
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import javax.validation.constraints.Email;
@@ -11,6 +8,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
@@ -18,12 +16,12 @@ public class UserDto {
     Long id;
 
     @Size(min = 2, max = 250)
-    @NotBlank//(message = "Поле Имя не должно быть пустым")
+    @NotBlank
     String name;
 
 
     @Email
     @Size(min = 6, max = 254)
-    @NotBlank//(message = "Поле email не должно быть пустым")
+    @NotBlank
     String email;
 }

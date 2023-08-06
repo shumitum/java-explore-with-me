@@ -2,11 +2,11 @@ package ru.practicum.mainsrv.category;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.mainsrv.event.EventRepository;
-import ru.practicum.mainsrv.exception.ValidationException;
+import ru.practicum.mainsrv.exception.ConflictException;
+import ru.practicum.mainsrv.utility.PageParam;
 
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -45,7 +45,7 @@ public class CategoryServiceImpl implements CategoryService {
     public void deleteCategoryById(Long catId) {
         checkCategoryExistence(catId);
         if (eventRepository.existsEventByCategory_Id(catId)) {
-            throw new ValidationException("с категорией не должно быть связано ни одного события.");
+            throw new ConflictException("с категорией не должно быть связано ни одного события.");
         }
         catRepository.deleteById(catId);
     }
@@ -53,8 +53,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     @Transactional(readOnly = true)
     public List<CategoryDto> getCategories(int from, int size) {
-        PageRequest page = PageRequest.of(from > 0 ? from / size : 0, size); //создать универсальный утиль? для паджинации
-        return catRepository.findAll(page).stream()
+        return catRepository.findAll(PageParam.of(from, size)).stream()
                 .map(catMapper::toCategoryDto)
                 .collect(Collectors.toList());
     }

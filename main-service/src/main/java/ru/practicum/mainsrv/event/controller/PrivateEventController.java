@@ -1,16 +1,18 @@
-package ru.practicum.mainsrv.event.cotroller;
+package ru.practicum.mainsrv.event.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.mainsrv.event.EventService;
-import ru.practicum.mainsrv.event.dto.*;
+import ru.practicum.mainsrv.event.dto.EventDto;
+import ru.practicum.mainsrv.event.dto.FullEventDto;
+import ru.practicum.mainsrv.event.dto.UpdateEventDto;
+import ru.practicum.mainsrv.event.dto.ViewEventDto;
 import ru.practicum.mainsrv.event.validation.TimeValidationService;
-import ru.practicum.mainsrv.request.RequestService;
-import ru.practicum.mainsrv.request.dto.RequestStatusUpdateResult;
 import ru.practicum.mainsrv.request.dto.RequestDto;
 import ru.practicum.mainsrv.request.dto.RequestStatusUpdateDto;
+import ru.practicum.mainsrv.request.dto.RequestStatusUpdateResult;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
@@ -25,7 +27,6 @@ import static ru.practicum.mainsrv.event.validation.TimeValidationService.MIN_HO
 @RequestMapping("/users/{userId}/events")
 public class PrivateEventController {
     private final TimeValidationService timeValidationService;
-    private final RequestService requestService;
     private final EventService eventService;
 
 

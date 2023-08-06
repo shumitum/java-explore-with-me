@@ -11,7 +11,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     @Query("select u from User as u " +
             "where ((:userIds) is NULL or u.id in :userIds)")
-    List<User> getUsers(@Param("userIds") List<Long> userIds, PageRequest page);
+    List<User> getUsersByIdsIn(@Param("userIds") List<Long> userIds, PageRequest page);
 }
 
 

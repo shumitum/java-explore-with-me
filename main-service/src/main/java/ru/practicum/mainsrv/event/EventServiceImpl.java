@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.client.StatsClient;
 import ru.practicum.dto.EndpointHitDto;
+import ru.practicum.dto.ViewStatsDto;
 import ru.practicum.mainsrv.category.CategoryService;
 import ru.practicum.mainsrv.event.dto.EventDto;
 import ru.practicum.mainsrv.event.dto.FullEventDto;
@@ -16,7 +17,7 @@ import ru.practicum.mainsrv.event.dto.ViewEventDto;
 import ru.practicum.mainsrv.event.enums.EventState;
 import ru.practicum.mainsrv.event.enums.EventStateAction;
 import ru.practicum.mainsrv.event.enums.SortBy;
-import ru.practicum.mainsrv.exception.ValidationException;
+import ru.practicum.mainsrv.exception.ConflictException;
 import ru.practicum.mainsrv.request.Request;
 import ru.practicum.mainsrv.request.RequestMapper;
 import ru.practicum.mainsrv.request.RequestRepository;
@@ -66,7 +67,6 @@ public class EventServiceImpl implements EventService {
     public List<ViewEventDto> getEventsByInitiatorId(Long userId, int from, int size) {
         return eventRepository.getEventsByInitiatorId(userId, PageParam.of(from, size)).stream()
                 .map(eventMapper::toViewEventDto)
-                //просетать views и confirmedRequests. взять с сервера статистики
                 .collect(Collectors.toList());
     }
 
@@ -75,7 +75,6 @@ public class EventServiceImpl implements EventService {
     public FullEventDto getEventById(Long userId, Long eventId) {
         userService.checkUserExistence(userId);
         checkThatUserIsEventCreator(userId, eventId);
-        //просетать views confirmedRequests. взять с сервера статистики
         return eventMapper.toFullEventDto(findEventById(eventId));
     }
 
@@ -85,7 +84,7 @@ public class EventServiceImpl implements EventService {
         Event updatingEvent = findEventById(eventId);
         checkThatUserIsEventCreator(userId, eventId);
         if (updatingEvent.getState().equals(EventState.PUBLISHED)) {
-            throw new ValidationException("Event must not be published");
+            throw new ConflictException("Event must not be published");
         }
         if (updatingEvent.getState().equals(EventState.CANCELED) || updatingEvent.getState().equals(EventState.PENDING)) {
             updateEventFields(eventDto, updatingEvent);
@@ -116,8 +115,8 @@ public class EventServiceImpl implements EventService {
     @Transactional(readOnly = true)
     public List<FullEventDto> searchEventsByAdmin(List<Long> users, List<EventState> states, List<Long> categories,
                                                   LocalDateTime rangeStart, LocalDateTime rangeEnd, int from, int size) {
-        //просетать views confirmedRequests. взять с сервера статистики
-        return eventRepository.searchEventsByAdmin(users, states, categories, rangeStart, rangeEnd, PageParam.of(from, size)).stream()
+        return eventRepository.searchEventsByAdmin(users, states, categories, rangeStart, rangeEnd, PageParam.of(from, size))
+                .stream()
                 .map(eventMapper::toFullEventDto)
                 .collect(Collectors.toList());
     }
@@ -135,7 +134,7 @@ public class EventServiceImpl implements EventService {
                     updatingEvent.setState(EventState.CANCELED);
                 }
             } else {
-                throw new ValidationException("Событие можно отклонить/опубликовать, только если оно не опубликовано");
+                throw new ConflictException("Событие можно отклонить/опубликовать, только если оно не опубликовано");
             }
         }
         updateEventFields(eventDto, updatingEvent);
@@ -147,39 +146,29 @@ public class EventServiceImpl implements EventService {
     public List<FullEventDto> searchEvents(String text, List<Long> categories, Boolean paid, LocalDateTime rangeStart,
                                            LocalDateTime rangeEnd, Boolean onlyAvailable, SortBy sort, int from, int size,
                                            HttpServletRequest request) {
-        //просетать views взять с сервера статистики
         PageRequest page = sort != null ? PageParam.of(from, size, sort.descending()) : PageParam.of(from, size);
         List<Event> events;
         if (onlyAvailable.equals(true)) {
             events = eventRepository.searchOnlyAvailableEvents(EventState.PUBLISHED, text, categories, paid,
                     Objects.requireNonNullElseGet(rangeStart, LocalDateTime::now), rangeEnd, page);
-            saveStatistic(request);
         } else {
             events = eventRepository.searchAnyEvents(EventState.PUBLISHED, text, categories, paid,
                     Objects.requireNonNullElseGet(rangeStart, LocalDateTime::now), rangeEnd, page);
-            saveStatistic(request);
         }
+        saveStatistic(request);
         return events.stream()
                 .map(eventMapper::toFullEventDto)
                 .collect(Collectors.toList());
     }
 
-    @Transactional
-    public void saveStatistic(HttpServletRequest request) {
-        statsClient.createEndpointHit(EndpointHitDto.builder()
-                .app("main-service")
-                .uri(request.getRequestURI())
-                .ip(request.getRemoteAddr())
-                .timestamp(LocalDateTime.now())
-                .build());
-    }
-
     @Override
-    @Transactional(readOnly = true)
+    @Transactional
     public FullEventDto getEventByIdByAnyone(Long eventId, HttpServletRequest request) {
+        Event event = eventRepository.getEventByIdAndState(eventId, EventState.PUBLISHED)
+                .orElseThrow(() -> new NoSuchElementException(String.format("События с ID=%d не существует", eventId)));
         saveStatistic(request);
-        return eventMapper.toFullEventDto(eventRepository.getEventByIdAndState(eventId, EventState.PUBLISHED)
-                .orElseThrow(() -> new NoSuchElementException(String.format("События с ID=%d не существует", eventId))));
+        setEventViews(event);
+        return eventMapper.toFullEventDto(event);
     }
 
     @Override
@@ -191,11 +180,11 @@ public class EventServiceImpl implements EventService {
             return new RequestStatusUpdateResult();
         }
         if (event.getConfirmedRequests() >= event.getParticipantLimit()) {
-            throw new ValidationException("достигнут лимит по заявкам на данное событие");
+            throw new ConflictException("достигнут лимит по заявкам на данное событие");
         }
         final List<Request> updatingRequests = requestRepository.getRequestsByIdIn(requestsUpdDto.getRequestIds());
         if (updatingRequests.stream().anyMatch(request -> !request.getStatus().equals(RequestStatus.PENDING))) {
-            throw new ValidationException("статус можно изменить только у заявок, находящихся в состоянии ожидания");
+            throw new ConflictException("статус можно изменить только у заявок, находящихся в состоянии ожидания");
         }
         long updateLimit = event.getParticipantLimit() - event.getConfirmedRequests();
         if (requestsUpdDto.getStatus().equals(RequestStatus.CONFIRMED)) {
@@ -245,7 +234,6 @@ public class EventServiceImpl implements EventService {
         Optional.ofNullable(eventDto.getTitle()).ifPresent(updatingEvent::setTitle);
     }
 
-
     @Transactional(readOnly = true)
     public void checkThatUserIsEventCreator(Long userId, Long eventId) {
         userService.checkUserExistence(userId);
@@ -254,6 +242,22 @@ public class EventServiceImpl implements EventService {
         }
     }
 
+    @Transactional
+    public void saveStatistic(HttpServletRequest request) {
+        statsClient.createEndpointHit(EndpointHitDto.builder()
+                .app("main-service")
+                .uri(request.getRequestURI())
+                .ip(request.getRemoteAddr())
+                .timestamp(LocalDateTime.now())
+                .build());
+    }
+
+    @Transactional
     public void setEventViews(Event event) {
+        List<ViewStatsDto> views = statsClient.getHitStatistics(event.getCreatedOn(), LocalDateTime.now(),
+                List.of(String.format("/events/%d", event.getId())), true);
+        if (!views.isEmpty() && (views.get(0).getHits() > 0)) {
+            event.setViews(views.get(0).getHits());
+        }
     }
 }

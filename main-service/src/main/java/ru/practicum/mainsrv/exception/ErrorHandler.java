@@ -33,17 +33,10 @@ public class ErrorHandler {
         return new ErrorResponse(e.getMessage());
     }
 
-    @ExceptionHandler({DataIntegrityViolationException.class, TimeValidationException.class, ValidationException.class})
+    @ExceptionHandler({DataIntegrityViolationException.class, TimeValidationException.class, ConflictException.class})
     @ResponseStatus(HttpStatus.CONFLICT)
     public ErrorResponse handleTimeValidationException(final Exception e) {
         log.warn("Получен статус 409 CONFLICT {}", e.getMessage());
         return new ErrorResponse(e.getMessage());
     }
-
-/*    @ExceptionHandler
-    @ResponseStatus(HttpStatus.CONFLICT)
-    public ErrorResponse handleValidationException(final ValidationException e) {
-        log.warn("Получен статус 409 CONFLICT {}", e.getMessage());
-        return new ErrorResponse(e.getMessage());
-    }*/
 }

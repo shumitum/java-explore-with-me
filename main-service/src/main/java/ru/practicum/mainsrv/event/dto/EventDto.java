@@ -37,7 +37,7 @@ public class EventDto {
     @Future
     @NotNull
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime eventDate; //провалидировать, минимум +2 часа к дате публикации
+    private LocalDateTime eventDate;
 
     @NotNull
     private Location location;
@@ -58,5 +58,5 @@ public class EventDto {
     @Size(min = 3, max = 120)
     private String title;
 
-    private Long views;
+    private long views;
 }

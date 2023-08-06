@@ -1,4 +1,4 @@
-package ru.practicum.mainsrv.event.cotroller;
+package ru.practicum.mainsrv.event.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -35,7 +35,8 @@ public class AdminEventController {
                                                   @RequestParam(required = false) LocalDateTime rangeEnd,
                                                   @RequestParam(defaultValue = "0") @PositiveOrZero int from,
                                                   @RequestParam(defaultValue = "10") @Positive int size) {
-        log.info("Поиск событий администратором");//насыпать параметров в логи
+        log.info("Поиск событий админом с параметрами users={}, states={}, categories={}, rangeStart={}, rangeEnd={}," +
+                " from={}, size={}", users, states, categories, rangeStart, rangeEnd, from, size);
         timeValidationService.checkStartTimeIsBeforeEndTime(rangeStart, rangeEnd);
         return eventService.searchEventsByAdmin(users, states, categories, rangeStart, rangeEnd, from, size);
     }
@@ -44,7 +45,7 @@ public class AdminEventController {
     @ResponseStatus(HttpStatus.OK)
     public FullEventDto updateEventByAdmin(@RequestBody @Valid UpdateEventDto updateEventDto,
                                            @PathVariable Long eventId) {
-        log.info("Запрос на изменение события с ID={} от администратора: {}", eventId, updateEventDto);
+        log.info("Запрос на изменение события с ID={} от администратора, обновленные данные: {}", eventId, updateEventDto);
         timeValidationService.validatePeriodBeforeEvent(updateEventDto.getEventDate(), MIN_HOURS_BEFORE_EVENT_FOR_ADMIN);
         return eventService.updateEventByAdmin(updateEventDto, eventId);
     }

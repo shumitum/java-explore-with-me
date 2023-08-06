@@ -11,8 +11,6 @@ public interface RequestRepository extends JpaRepository<Request, Long> {
 
     List<Request> getRequestsByEventId(Long eventId);
 
-    List<Request> getRequestsByIdInAndStatus(List<Long> requestIds, RequestStatus status);
-
     List<Request> getRequestsByIdIn(List<Long> requestIds);
 
     Long countRequestsByEvent_IdAndStatus(Long eventId, RequestStatus status);

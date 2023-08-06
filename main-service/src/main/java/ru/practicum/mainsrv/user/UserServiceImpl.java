@@ -2,10 +2,10 @@ package ru.practicum.mainsrv.user;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.mainsrv.user.dto.UserDto;
+import ru.practicum.mainsrv.utility.PageParam;
 
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -29,8 +29,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional(readOnly = true)
     public List<UserDto> getUsers(List<Long> userIds, int from, int size) {
-        PageRequest page = PageRequest.of(from > 0 ? from / size : 0, size); //создать универсальный утиль? для паджинации
-        return userRepository.getUsers(userIds, page).stream()
+        return userRepository.getUsersByIdsIn(userIds, PageParam.of(from, size)).stream()
                 .map(userMapper::toUserDto)
                 .collect(Collectors.toList());
     }

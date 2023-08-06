@@ -14,7 +14,6 @@ import java.time.LocalDateTime;
 
 @Data
 @Entity
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
@@ -68,7 +67,7 @@ public class Event {
     LocalDateTime publishedOn;
 
     @Column(name = "request_moderation")
-    Boolean requestModeration; //по умолчанию при создании значение???
+    Boolean requestModeration;
 
     @NotNull
     @Column(name = "state")
@@ -79,5 +78,6 @@ public class Event {
     @Column(name = "title")
     String title;
 
-    //Long views;
+    @Column(name = "views")
+    long views;
 }

@@ -2,7 +2,6 @@ package ru.practicum.mainsrv.event.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import ru.practicum.mainsrv.event.enums.EventStateAction;
@@ -14,7 +13,6 @@ import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 
 @Data
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class UpdateEventDto {
@@ -29,7 +27,7 @@ public class UpdateEventDto {
 
     @Future
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime eventDate; //провалидировать, минимум +2 часа к дате публикации
+    private LocalDateTime eventDate;
 
     private Location location;
 

@@ -27,11 +27,11 @@ public class AdminUserController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<UserDto> getUsers(@RequestParam(required = false) List<Long> userIds,
+    public List<UserDto> getUsers(@RequestParam(required = false) List<Long> ids,
                                   @RequestParam(defaultValue = "0") @PositiveOrZero int from,
                                   @RequestParam(defaultValue = "10") @Positive int size) {
-        log.info("Запрошен список пользователей IDs:{}, from={}, size={}", userIds, from, size);
-        return userService.getUsers(userIds, from, size);
+        log.info("Запрошен список пользователей IDs:{}, from={}, size={}", ids, from, size);
+        return userService.getUsers(ids, from, size);
     }
 
     @DeleteMapping("/{userId}")

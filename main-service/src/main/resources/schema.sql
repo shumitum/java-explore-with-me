@@ -36,6 +36,7 @@ create table if not exists events
     request_moderation boolean       not null,
     state              varchar(50)   not null,
     title              varchar(120)  not null,
+    views              bigint,
     constraint events_pk primary key (event_id),
     constraint fk_events_to_users foreign key (initiator_id) references users (user_id) on delete cascade,
     constraint fk_events_to_categories foreign key (category_id) references categories (category_id) on delete cascade
