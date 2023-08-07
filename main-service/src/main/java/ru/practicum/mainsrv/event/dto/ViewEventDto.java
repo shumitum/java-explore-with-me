@@ -15,13 +15,13 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ViewEventDto {
-    Long id;
+    private Long id;
     private String annotation;
     private Category category;
     int confirmedRequests;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime eventDate;
-    UserInfoDto initiator;
+    private UserInfoDto initiator;
     private Boolean paid;
     private String title;
     private long views;

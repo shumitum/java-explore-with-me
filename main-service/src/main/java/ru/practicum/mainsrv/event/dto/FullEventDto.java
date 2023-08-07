@@ -15,16 +15,16 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class FullEventDto {
-    Long id;
+    private Long id;
     private String annotation;
     private Category category;
-    int confirmedRequests;
+    private int confirmedRequests;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
-    LocalDateTime createdOn;
+    private LocalDateTime createdOn;
     private String description;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime eventDate;
-    UserInfoDto initiator;
+    private UserInfoDto initiator;
     private Location location;
     private Boolean paid;
     private int participantLimit;

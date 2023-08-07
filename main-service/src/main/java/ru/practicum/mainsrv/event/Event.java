@@ -1,7 +1,9 @@
 package ru.practicum.mainsrv.event;
 
-import lombok.*;
-import lombok.experimental.FieldDefaults;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 import ru.practicum.mainsrv.category.Category;
 import ru.practicum.mainsrv.event.enums.EventState;
 import ru.practicum.mainsrv.event.location.Location;
@@ -16,68 +18,67 @@ import java.time.LocalDateTime;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE)
 @Table(name = "events", schema = "public")
 public class Event {
     @Id
     @Column(name = "event_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
+    private Long id;
 
     @NotBlank
     @Column(name = "annotation")
-    String annotation;
+    private String annotation;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id", referencedColumnName = "category_id")
     @ToString.Exclude
-    Category category;
+    private Category category;
 
     @Column(name = "confirmed_requests")
-    Long confirmedRequests;
+    private Long confirmedRequests;
 
     @NotNull
     @Column(name = "created_on")
-    LocalDateTime createdOn;
+    private LocalDateTime createdOn;
 
     @NotBlank
     @Column(name = "description")
-    String description;
+    private String description;
 
     @NotNull
     @Column(name = "event_date")
-    LocalDateTime eventDate;
+    private LocalDateTime eventDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "initiator_id", referencedColumnName = "user_id")
     @ToString.Exclude
-    User initiator;
+    private User initiator;
 
     @Embedded
-    Location location;
+    private Location location;
 
     @NotNull
     @Column(name = "paid")
-    Boolean paid;
+    private Boolean paid;
 
     @Column(name = "participant_limit")
-    int participantLimit;
+    private int participantLimit;
 
     @Column(name = "published_on")
-    LocalDateTime publishedOn;
+    private LocalDateTime publishedOn;
 
     @Column(name = "request_moderation")
-    Boolean requestModeration;
+    private Boolean requestModeration;
 
     @NotNull
     @Column(name = "state")
     @Enumerated(EnumType.STRING)
-    EventState state;
+    private EventState state;
 
     @NotBlank
     @Column(name = "title")
-    String title;
+    private String title;
 
     @Column(name = "views")
-    long views;
+    private long views;
 }

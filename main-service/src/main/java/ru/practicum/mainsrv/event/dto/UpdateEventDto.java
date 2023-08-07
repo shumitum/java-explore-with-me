@@ -18,27 +18,18 @@ import java.time.LocalDateTime;
 public class UpdateEventDto {
     @Size(min = 20, max = 2000)
     private String annotation;
-
     @PositiveOrZero
     private Long category;
-
     @Size(min = 20, max = 7000)
     private String description;
-
     @Future
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime eventDate;
-
     private Location location;
-
     private Boolean paid;
-
     private Integer participantLimit;
-
     private Boolean requestModeration;
-
     private EventStateAction stateAction;
-
     @Size(min = 3, max = 120)
     private String title;
 }

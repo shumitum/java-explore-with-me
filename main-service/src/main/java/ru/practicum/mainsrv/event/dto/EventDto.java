@@ -26,9 +26,9 @@ public class EventDto {
     private Long category;
 
     @Builder.Default
-    LocalDateTime createdOn = LocalDateTime.now();
+    private LocalDateTime createdOn = LocalDateTime.now();
 
-    int confirmedRequests;
+    private int confirmedRequests;
 
     @NotBlank
     @Size(min = 20, max = 7000)
@@ -52,7 +52,7 @@ public class EventDto {
     private Boolean requestModeration = true;
 
     @Builder.Default
-    EventState state = EventState.PENDING;
+    private EventState state = EventState.PENDING;
 
     @NotBlank
     @Size(min = 3, max = 120)

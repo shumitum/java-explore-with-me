@@ -215,6 +215,7 @@ public class EventServiceImpl implements EventService {
         event.setConfirmedRequests(requestRepository.countRequestsByEvent_IdAndStatus(event.getId(), RequestStatus.CONFIRMED));
     }
 
+    @Override
     @Transactional(readOnly = true)
     public Event findEventById(long eventId) {
         return eventRepository.findById(eventId)

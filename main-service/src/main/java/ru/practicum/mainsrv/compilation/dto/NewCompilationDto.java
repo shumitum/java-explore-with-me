@@ -1,28 +1,25 @@
-package ru.practicum.mainsrv.user.dto;
+package ru.practicum.mainsrv.compilation.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+import java.util.List;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserDto {
-    private Long id;
+public class NewCompilationDto {
+    @Builder.Default
+    private Boolean pinned = false;
 
-    @Size(min = 2, max = 250)
     @NotBlank
-    private String name;
+    @Size(min = 1, max = 50)
+    private String title;
 
-
-    @Email
-    @Size(min = 6, max = 254)
-    @NotBlank
-    private String email;
+    private List<Long> events;
 }

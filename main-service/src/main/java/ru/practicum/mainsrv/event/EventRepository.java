@@ -16,6 +16,8 @@ public interface EventRepository extends JpaRepository<Event, Long> {
 
     Optional<Event> getEventByIdAndState(Long eventId, EventState state);
 
+    List<Event> getEventsByIdIn(List<Long> evenIds);
+
     Boolean existsEventByCategory_Id(Long catId);
 
     @Query("select e from Event as e " +
