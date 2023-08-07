@@ -257,7 +257,7 @@ public class EventServiceImpl implements EventService {
     public void setEventViews(Event event) {
         List<ViewStatsDto> views = statsClient.getHitStatistics(event.getCreatedOn(), LocalDateTime.now(),
                 List.of(String.format("/events/%d", event.getId())), true);
-        if (!views.isEmpty() && (views.get(0).getHits() > 0)) {
+        if (!views.isEmpty() && (views.get(0).getHits() != event.getViews()) && (views.get(0).getHits() > 0)) {
             event.setViews(views.get(0).getHits());
         }
     }

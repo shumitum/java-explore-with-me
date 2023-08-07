@@ -19,6 +19,7 @@ import java.util.Map;
 
 @Service
 public class StatsClient extends BaseClient {
+    public static final String DATE_TIME_PATTERN = "yyyy-MM-dd HH:mm:ss";
 
     @Autowired
     public StatsClient(@Value("${stats-server.url}") String serverUrl, RestTemplateBuilder builder) {
@@ -39,8 +40,8 @@ public class StatsClient extends BaseClient {
                                                @RequestParam(required = false) List<String> uris,
                                                @RequestParam(defaultValue = "false") boolean unique) {
         Map<String, Object> parameters = Map.of(
-                "start", start.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
-                "end", end.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
+                "start", start.format(DateTimeFormatter.ofPattern(DATE_TIME_PATTERN)),
+                "end", end.format(DateTimeFormatter.ofPattern(DATE_TIME_PATTERN)),
                 "uris", String.join(",", uris),
                 "unique", unique
         );

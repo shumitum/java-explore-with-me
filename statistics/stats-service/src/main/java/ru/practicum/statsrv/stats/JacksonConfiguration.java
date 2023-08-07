@@ -10,13 +10,14 @@ import java.time.format.DateTimeFormatter;
 
 @Configuration
 public class JacksonConfiguration {
+    public static final String DATE_TIME_PATTERN = "yyyy-MM-dd HH:mm:ss";
 
     @Bean
     public Jackson2ObjectMapperBuilderCustomizer jackson2ObjectMapperBuilderCustomizer() {
 
         return builder -> {
 
-            DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(DATE_TIME_PATTERN);
 
             builder.deserializers(new LocalDateTimeDeserializer(dateTimeFormatter));
 
