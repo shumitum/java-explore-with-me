@@ -8,9 +8,10 @@ import org.springframework.context.annotation.Configuration;
 
 import java.time.format.DateTimeFormatter;
 
+import static ru.practicum.dto.EndpointHitDto.DATE_TIME_PATTERN;
+
 @Configuration
 public class JacksonConfiguration {
-    public static final String DATE_TIME_PATTERN = "yyyy-MM-dd HH:mm:ss";
 
     @Bean
     public Jackson2ObjectMapperBuilderCustomizer jackson2ObjectMapperBuilderCustomizer() {

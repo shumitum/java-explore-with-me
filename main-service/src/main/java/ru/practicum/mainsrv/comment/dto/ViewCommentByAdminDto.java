@@ -1,11 +1,11 @@
-package ru.practicum.mainsrv.event.dto;
+package ru.practicum.mainsrv.comment.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import ru.practicum.mainsrv.category.Category;
+import ru.practicum.mainsrv.comment.ReasonForHiding;
 import ru.practicum.mainsrv.user.dto.UserInfoDto;
 
 import java.time.LocalDateTime;
@@ -16,15 +16,13 @@ import static ru.practicum.dto.EndpointHitDto.DATE_TIME_PATTERN;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ViewEventDto {
+public class ViewCommentByAdminDto {
     private Long id;
-    private String annotation;
-    private Category category;
-    int confirmedRequests;
+    private String text;
+    private UserInfoDto author;
+    private Long eventId;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = DATE_TIME_PATTERN)
-    private LocalDateTime eventDate;
-    private UserInfoDto initiator;
-    private Boolean paid;
-    private String title;
-    private long views;
+    private LocalDateTime created;
+    private Boolean visible;
+    private ReasonForHiding reason;
 }

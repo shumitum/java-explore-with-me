@@ -3,6 +3,7 @@ package ru.practicum.mainsrv.event.controller;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.mainsrv.event.EventService;
 import ru.practicum.mainsrv.event.dto.FullEventDto;
@@ -19,6 +20,7 @@ import java.util.List;
 import static ru.practicum.mainsrv.event.validation.TimeValidationService.MIN_HOURS_BEFORE_EVENT_FOR_ADMIN;
 
 @Slf4j
+@Validated
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/admin/events")

@@ -11,6 +11,8 @@ import ru.practicum.mainsrv.user.dto.UserInfoDto;
 
 import java.time.LocalDateTime;
 
+import static ru.practicum.dto.EndpointHitDto.DATE_TIME_PATTERN;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -19,16 +21,16 @@ public class FullEventDto {
     private String annotation;
     private Category category;
     private int confirmedRequests;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = DATE_TIME_PATTERN)
     private LocalDateTime createdOn;
     private String description;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = DATE_TIME_PATTERN)
     private LocalDateTime eventDate;
     private UserInfoDto initiator;
     private Location location;
     private Boolean paid;
     private int participantLimit;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = DATE_TIME_PATTERN)
     private LocalDateTime publishedOn;
     private Boolean requestModeration;
     private EventState state;

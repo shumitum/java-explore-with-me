@@ -17,9 +17,10 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 
+import static ru.practicum.dto.EndpointHitDto.DATE_TIME_PATTERN;
+
 @Service
 public class StatsClient extends BaseClient {
-    public static final String DATE_TIME_PATTERN = "yyyy-MM-dd HH:mm:ss";
 
     @Autowired
     public StatsClient(@Value("${stats-server.url}") String serverUrl, RestTemplateBuilder builder) {

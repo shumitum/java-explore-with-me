@@ -222,6 +222,14 @@ public class EventServiceImpl implements EventService {
                 .orElseThrow(() -> new NoSuchElementException(String.format("События с ID=%d не существует", eventId)));
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public void checkEventExistence(long eventId) {
+        if (!eventRepository.existsById(eventId)) {
+            throw new NoSuchElementException(String.format("События с ID=%d не существует", eventId));
+        }
+    }
+
     @Transactional
     public void updateEventFields(UpdateEventDto eventDto, Event updatingEvent) {
         Optional.ofNullable(eventDto.getAnnotation()).ifPresent(updatingEvent::setAnnotation);

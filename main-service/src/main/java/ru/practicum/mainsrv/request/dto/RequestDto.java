@@ -9,6 +9,8 @@ import ru.practicum.mainsrv.request.RequestStatus;
 
 import java.time.LocalDateTime;
 
+import static ru.practicum.dto.EndpointHitDto.DATE_TIME_PATTERN;
+
 @Data
 @Builder
 @NoArgsConstructor
@@ -18,6 +20,6 @@ public class RequestDto {
     private Long event;
     private Long requester;
     private RequestStatus status;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = DATE_TIME_PATTERN)
     private LocalDateTime created;
 }
