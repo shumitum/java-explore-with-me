@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.mainsrv.comment.dto.*;
 import ru.practicum.mainsrv.event.EventService;
 import ru.practicum.mainsrv.exception.ConflictException;
+import ru.practicum.mainsrv.exception.InvalidArgumentException;
 import ru.practicum.mainsrv.user.UserService;
 import ru.practicum.mainsrv.utility.PageParam;
 
@@ -44,13 +45,15 @@ public class CommentServiceImpl implements CommentService {
         if (updatingComment.getCreated().plusMinutes(15).isBefore(LocalDateTime.now())) {
             throw new IllegalArgumentException("Комментарий можно редактировать только в течении первых 15 минут");
         }
-        if (commentDto.getText() != null) {
+        if (commentDto.getText() != null && !commentDto.getText().isEmpty() && commentDto.getText().length() <= 1000) {
             if (updatingComment.getVisible().equals(false)) {
                 throw new ConflictException("Нельзя редактировать скрытые комментарии");
             }
             if (!updatingComment.getText().equals(commentDto.getText())) {
                 updatingComment.setText(commentDto.getText());
             }
+        } else {
+            throw new InvalidArgumentException("Новый текст комментария не должен быть пуст или превышать 1000 символов");
         }
         log.info("Комментарий отредактирован: {}", updatingComment);
         return commentMapper.toViewCommentDto(updatingComment);
