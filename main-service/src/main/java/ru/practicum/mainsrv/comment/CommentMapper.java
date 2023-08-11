@@ -24,4 +24,8 @@ public interface CommentMapper {
     @Mapping(target = "author", source = "comment.author")
     @Mapping(target = "eventId", source = "comment.event.id")
     List<ViewCommentDto> toViewCommentDtoList(List<Comment> comments);
+
+    @Mapping(target = "author", source = "comment.author")
+    @Mapping(target = "eventId", source = "comment.event.id")
+    List<ViewCommentByAdminDto> toViewCommentByAdminDtoList(List<Comment> comments);
 }

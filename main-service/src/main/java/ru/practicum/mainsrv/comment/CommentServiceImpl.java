@@ -11,8 +11,10 @@ import ru.practicum.mainsrv.user.UserService;
 import ru.practicum.mainsrv.utility.PageParam;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -40,7 +42,7 @@ public class CommentServiceImpl implements CommentService {
         checkThatUserIsCommentCreator(userId, commentId);
         final Comment updatingComment = findCommentById(commentId);
         if (updatingComment.getCreated().plusMinutes(15).isBefore(LocalDateTime.now())) {
-            throw new ConflictException("Комментарий можно редактировать только в течении первых 15 минут");
+            throw new IllegalArgumentException("Комментарий можно редактировать только в течении первых 15 минут");
         }
         if (commentDto.getText() != null) {
             if (updatingComment.getVisible().equals(false)) {
@@ -88,11 +90,12 @@ public class CommentServiceImpl implements CommentService {
         if (comment.getCreated().plusMinutes(15).isAfter(LocalDateTime.now())) {
             commentRepository.deleteById(commentId);
         } else {
-            throw new ConflictException("Комментарий можно удалить только в течении первых 15 минут");
+            throw new IllegalArgumentException("Комментарий можно удалить только в течении первых 15 минут");
         }
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<ViewCommentDto> getEventComments(Long eventId, int from, int size) {
         eventService.checkEventExistence(eventId);
         return commentMapper.toViewCommentDtoList(commentRepository.getCommentsByEventIdAndVisibleOrderByIdAsc(eventId,
@@ -100,40 +103,54 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public List<ViewCommentByAdminDto> getCommentsByAdmin(Boolean visible, int from, int size) {
-        return null;
+        return commentMapper.toViewCommentByAdminDtoList(commentRepository.getComments(visible, PageParam.of(from, size)));
     }
 
     @Override
     @Transactional
     public List<ViewCommentByAdminDto> hideComments(CommentVisibilityUpdateDto commentDto) {
-        return null;
+        return commentMapper.toViewCommentByAdminDtoList(commentDto.getCommentIds().stream()
+                .map(this::findCommentById)
+                .peek(comment -> comment.setVisible(false))
+                .peek(comment -> comment.setReason(commentDto.getReason()))
+                .collect(Collectors.toList()));
     }
 
     @Override
     @Transactional
     public List<ViewCommentByAdminDto> displayComments(List<Long> ids) {
-        return null;
+        return commentMapper.toViewCommentByAdminDtoList(ids.stream()
+                .map(this::findCommentById)
+                .peek(comment -> comment.setVisible(true))
+                .peek(comment -> comment.setReason(null))
+                .collect(Collectors.toList()));
     }
 
     @Override
     @Transactional
     public void deleteCommentsByAdmin(List<Long> ids) {
-
+        List<Long> deletedCommentIds = new ArrayList<>();
+        List<Long> doesntExistCommentIds = new ArrayList<>();
+        for (Long id : ids) {
+            if (commentRepository.existsById(id)) {
+                commentRepository.deleteById(id);
+                deletedCommentIds.add(id);
+            } else {
+                doesntExistCommentIds.add(id);
+            }
+        }
+        if (deletedCommentIds.isEmpty()) {
+            throw new NoSuchElementException(String.format("Комментарии с указанными ID не существуют: %s", doesntExistCommentIds));
+        }
+        log.info("Удалены комментарии с ID: {}, ID несуществующих комментов: {}", deletedCommentIds, doesntExistCommentIds);
     }
 
     @Transactional(readOnly = true)
     public Comment findCommentById(Long commentId) {
         return commentRepository.findById(commentId)
                 .orElseThrow(() -> new NoSuchElementException(String.format("Комментария с ID=%d не существует", commentId)));
-    }
-
-    @Transactional(readOnly = true)
-    public void checkCommentExistence(Long commentId) {
-        if (!commentRepository.existsById(commentId)) {
-            throw new NoSuchElementException(String.format("Комментария с ID=%d не существует", commentId));
-        }
     }
 
     @Transactional(readOnly = true)

@@ -15,8 +15,8 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CommentVisibilityUpdateDto {
-    @NotEmpty//(groups = {Hide.class, Display.class})
+    @NotEmpty
     private List<Long> commentIds;
-    @NotNull//(groups = Hide.class)
+    @NotNull
     private ReasonForHiding reason;
 }

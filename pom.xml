@@ -14,7 +14,6 @@
 	<modules>
 		<module>statistics</module>
 		<module>main-service</module>
-		<module>postman</module>
 	</modules>
 
 	<groupId>ru.practicum</groupId>

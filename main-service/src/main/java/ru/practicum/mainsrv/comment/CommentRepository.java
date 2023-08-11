@@ -24,8 +24,13 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
                                         @Param("rangeEnd") LocalDateTime rangeEnd,
                                         PageRequest page);
 
+    @Query("select c from Comment as c " +
+            "where (:visible is NULL or c.visible = :visible) " +
+            "order by c.id")
+    List<Comment> getComments(@Param("visible") Boolean visible, PageRequest page);
+
     List<Comment> getCommentsByAuthorIdAndEventIdAndVisibleOrderByIdAsc(Long authorId, Long eventId,
-                                                                          Boolean visible, PageRequest page);
+                                                                        Boolean visible, PageRequest page);
 
     List<Comment> getCommentsByEventIdAndVisibleOrderByIdAsc(Long eventId, Boolean visible, PageRequest page);
 }

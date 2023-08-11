@@ -28,14 +28,14 @@ public class AdminCommentController {
     public List<ViewCommentByAdminDto> getCommentsByAdmin(@RequestParam(required = false) Boolean visible,
                                                           @RequestParam(defaultValue = "0") @PositiveOrZero int from,
                                                           @RequestParam(defaultValue = "10") @Positive int size) {
-        log.info("Администраторский запрос списка комментариев. Только отображаемые комментарии?: {}", visible);
+        log.info("Администраторский запрос списка комментариев. Только видимые комментарии?:{}", visible);
         return commentService.getCommentsByAdmin(visible, from, size);
     }
 
     @PatchMapping("/hide")
     @ResponseStatus(HttpStatus.OK)
     public List<ViewCommentByAdminDto> hideComments(@RequestBody @Valid CommentVisibilityUpdateDto hideCommentDto) {
-        log.info("Администраторский запрос на сокрытия комментариев, {}", hideCommentDto);
+        log.info("Администраторский запрос на сокрытие комментариев IDs:{}", hideCommentDto);
         return commentService.hideComments(hideCommentDto);
     }
 
