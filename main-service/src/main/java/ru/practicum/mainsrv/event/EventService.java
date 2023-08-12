@@ -41,4 +41,6 @@ public interface EventService {
     RequestStatusUpdateResult updateRequestsStatus(RequestStatusUpdateDto requestsUpdDto, Long userId, Long eventId);
 
     void countAndSetEventConfirmedRequests(Event event);
+
+    void checkEventExistence(long eventId);
 }

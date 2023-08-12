@@ -12,6 +12,8 @@ import javax.validation.constraints.PositiveOrZero;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 
+import static ru.practicum.dto.EndpointHitDto.DATE_TIME_PATTERN;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -23,10 +25,11 @@ public class UpdateEventDto {
     @Size(min = 20, max = 7000)
     private String description;
     @Future
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = DATE_TIME_PATTERN)
     private LocalDateTime eventDate;
     private Location location;
     private Boolean paid;
+    @PositiveOrZero
     private Integer participantLimit;
     private Boolean requestModeration;
     private EventStateAction stateAction;

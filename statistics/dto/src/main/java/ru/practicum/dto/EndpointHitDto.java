@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 @Data
 @Builder
 public class EndpointHitDto {
+    public static final String DATE_TIME_PATTERN = "yyyy-MM-dd HH:mm:ss";
     @NotBlank
     private String app;
     @NotBlank
@@ -18,6 +19,6 @@ public class EndpointHitDto {
     @NotBlank
     private String ip;
     @NotNull
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = DATE_TIME_PATTERN)
     private LocalDateTime timestamp;
 }

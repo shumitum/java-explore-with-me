@@ -11,6 +11,8 @@ import ru.practicum.mainsrv.event.location.Location;
 import javax.validation.constraints.*;
 import java.time.LocalDateTime;
 
+import static ru.practicum.dto.EndpointHitDto.DATE_TIME_PATTERN;
+
 @Data
 @Builder
 @NoArgsConstructor
@@ -28,6 +30,7 @@ public class EventDto {
     @Builder.Default
     private LocalDateTime createdOn = LocalDateTime.now();
 
+    @PositiveOrZero
     private int confirmedRequests;
 
     @NotBlank
@@ -36,7 +39,7 @@ public class EventDto {
 
     @Future
     @NotNull
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = DATE_TIME_PATTERN)
     private LocalDateTime eventDate;
 
     @NotNull
