@@ -7,5 +7,5 @@
 [Cпецификация API основного сервиса приложения.](https://raw.githubusercontent.com/yandex-praktikum/java-explore-with-me/main/ewm-main-service-spec.json)
 
 
-ER-диаграмма БД приложения:
+ER-диаграмма БД проекта:
 ![ewm_er_diagram.png](ewm_er_diagram.png)
