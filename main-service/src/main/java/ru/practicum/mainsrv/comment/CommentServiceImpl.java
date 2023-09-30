@@ -2,6 +2,10 @@ package ru.practicum.mainsrv.comment;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.mainsrv.comment.dto.*;
@@ -20,6 +24,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @Service
 @RequiredArgsConstructor
+@CacheConfig(cacheNames = "comments")
 public class CommentServiceImpl implements CommentService {
     private final CommentRepository commentRepository;
     private final EventService eventService;
@@ -39,6 +44,7 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     @Transactional
+    @CachePut(key = "#commentId")
     public ViewCommentDto updateComment(CommentUpdateDto commentDto, Long userId, Long commentId) {
         checkThatUserIsCommentCreator(userId, commentId);
         final Comment updatingComment = findCommentById(commentId);
@@ -87,6 +93,7 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     @Transactional
+    @CacheEvict(key = "#commentId")
     public void deleteComment(Long userId, Long commentId) {
         checkThatUserIsCommentCreator(userId, commentId);
         final Comment comment = findCommentById(commentId);
@@ -151,6 +158,7 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Transactional(readOnly = true)
+    @Cacheable
     public Comment findCommentById(Long commentId) {
         return commentRepository.findById(commentId)
                 .orElseThrow(() -> new NoSuchElementException(String.format("Комментария с ID=%d не существует", commentId)));
