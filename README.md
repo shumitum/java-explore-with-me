@@ -4,7 +4,8 @@
 Стек:  **Java 11, Spring Boot, Maven, PostgreSQL, Hibernate, Docker, REST.**  
 
 [Cпецификация API сервиса статистики приложения.](https://raw.githubusercontent.com/yandex-praktikum/java-explore-with-me/main/ewm-stats-service-spec.json)  
-[Cпецификация API основного сервиса приложения.](https://raw.githubusercontent.com/yandex-praktikum/java-explore-with-me/main/ewm-main-service-spec.json)
+[Cпецификация API основного сервиса приложения.](https://raw.githubusercontent.com/yandex-praktikum/java-explore-with-me/main/ewm-main-service-spec.json)  
+Спецификации можно открыть в https://editor-next.swagger.io/
 
 ---
 
@@ -22,7 +23,6 @@ docker-compose up
 ```
 
 ---
-
 
 ER-диаграмма БД проекта:  
 ![ewm_er_diagram.png](ewm_er_diagram.png)
