@@ -6,6 +6,23 @@
 [Cпецификация API сервиса статистики приложения.](https://raw.githubusercontent.com/yandex-praktikum/java-explore-with-me/main/ewm-stats-service-spec.json)  
 [Cпецификация API основного сервиса приложения.](https://raw.githubusercontent.com/yandex-praktikum/java-explore-with-me/main/ewm-main-service-spec.json)
 
+---
 
-ER-диаграмма БД проекта:
+### Запуск приложения
+
+Чтобы запустить приложение необходимо
+* Скачать или клонировать репозиторий (git clone https://github.com/shumitum/java-explore-with-me.git)
+* Собрать проект командой
+```bash
+mvn clean package
+```
+* После успешной сборки запустить контейнеры командой
+```bash
+docker-compose up
+```
+
+---
+
+
+ER-диаграмма БД проекта:  
 ![ewm_er_diagram.png](ewm_er_diagram.png)
